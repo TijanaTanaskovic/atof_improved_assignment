@@ -33,10 +33,10 @@ namespace atof_improved_assignment
 
             }
 
-            foreach (var clan in listaUzorka)
+            /*foreach (var clan in listaUzorka)
             {
                 Console.WriteLine(clan.Komentar);
-            }
+            }*/
 
 
             /*foreach (var a in datum)

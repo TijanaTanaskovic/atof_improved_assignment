@@ -9,9 +9,9 @@ namespace atof_improved_assignment
     {
         private String komentar;
         private DateTime datum;
-        private float rezultat;
+        private double rezultat;
         private bool validan = true; //za validaciju podataka (datum, rezultat)
-
+       
         public String Komentar
         {
             get { return komentar; }
@@ -23,7 +23,7 @@ namespace atof_improved_assignment
             set { datum = value; }
         }
 
-        public float Rezultat
+        public double Rezultat
         {
             get { return rezultat; }
             set { rezultat = value; }
@@ -58,30 +58,91 @@ namespace atof_improved_assignment
             {
                 this.validan = false;
             }
+
+            double? validanRezultat = validirajRezultat(rezultat);
+            if (validanRezultat != null)
+            {
+                this.rezultat = (double)validanRezultat;
+            }
+            else
+            {
+                this.validan = false;
+            }
+            Console.WriteLine("Objekat je: " + this.validan);
+            Console.WriteLine("Rezutat uzorka je: " + this.rezultat);
+            
         }
 
-        public bool validirajRezultat(string rezultat)
+        private float strToIntegerPart(string str)
         {
-            return false;
-            //uradi
+            float response = 0;
+
+            foreach (char c in str)
+            {
+                response *= 10;
+                response += c - '0';
+            }
+
+            return response;
         }
+
+        private double? validirajRezultat(string str)
+        {
+            String[] splitStr = str.Split(".");
+            if (splitStr.Length == 2)
+            {
+                float integerPart = strToIntegerPart(splitStr[0]);
+                double floatPart = strToDecimalPart(splitStr[1]);
+
+                return integerPart + floatPart;
+            }
+            else if (splitStr.Length == 1 && !str.ToLower().Contains('e'))
+            {
+                double result = 0;
+                float integerPart = strToIntegerPart(splitStr[0]);
+                return result + integerPart;
+            }
+            else
+            {
+                return null;
+            }
+
+
+        }
+
+        private double strToDecimalPart(string str)
+        {
+            double accumulator = 0.1;
+            double response = 0;
+            foreach (char c in str)
+            {
+                float number = c - '0';
+                response += number * accumulator;
+                accumulator = accumulator / 10;
+            }
+            //Console.WriteLine(response);
+            return response;
+        }
+
+        //Console.WriteLine(strTointegerPart("123456"));
+        //Console.WriteLine(parseDecimal("47.54")); 
 
         private bool validirajDatum(string date)
         {
             string[] formats = { "dd/MM/yyyy", "dd.MM.yyyy", "dd.MM.yyyy." };
             DateTime dateValue;
-            if (DateTime.TryParseExact(date, formats,
+            if (DateTime.TryParseExact(date, formats, 
                       new CultureInfo("en-US"),
                       DateTimeStyles.None,
                       out dateValue))
             {
-                Console.WriteLine("Converted '{0}' to {1}.", date, dateValue);
+                //Console.WriteLine("Converted '{0}' to {1}.", date, dateValue);
                 return true;
             }
 
             else
             {
-                Console.WriteLine("Unable to convert '{0}' to a date.", date);
+                //Console.WriteLine("Unable to convert '{0}' to a date.", date);
                 return false;
             }
 
