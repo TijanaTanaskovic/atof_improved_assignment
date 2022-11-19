@@ -211,9 +211,6 @@ namespace atof_improved_assignment
             return response;
         }
 
-        //Console.WriteLine(strTointegerPart("123456"));
-        //Console.WriteLine(parseDecimal("47.54")); 
-
         private bool validirajDatum(string date)
         {
             string[] formats = { "dd/MM/yyyy", "dd.MM.yyyy", "dd.MM.yyyy." };
