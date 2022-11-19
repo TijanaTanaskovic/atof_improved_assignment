@@ -9,7 +9,6 @@ namespace atof_improved_assignment
     class Uzorak
     {
         List<String> errors = new List<string>();
-        //List<String> errorsR = new List<string>();
 
         private String komentar;
         private DateTime datum;
@@ -67,8 +66,7 @@ namespace atof_improved_assignment
             else
             {
                 this.validan = false;
-                //this.komentarValidacije += "Format datuma se ne slaze sa zadatim formatima. Originalni datum: " + datum;
-                //errors.Add(komentarValidacije);
+                
             }
 
             double? validanRezultat = validirajRezultat(rezultat);
@@ -79,8 +77,7 @@ namespace atof_improved_assignment
             else
             {
                 this.validan = false;
-                //this.komentarValidacije += "Nemoguce je konvertovati rezultat. Originalan rezultat: " + rezultat;
-                //errors.Add(komentarValidacije);
+              
             }
             Console.WriteLine("Objekat je: " + this.validan);
             Console.WriteLine("Rezutat uzorka je: " + this.rezultat);
@@ -92,7 +89,7 @@ namespace atof_improved_assignment
                 errors.Add(komentarValidacije);
             }
 
-            //System.IO.File.AppendAllLines(@"output.err.txt", errors);
+            
 
             System.IO.File.AppendAllLines(@"output.err.txt", errors);
         }
