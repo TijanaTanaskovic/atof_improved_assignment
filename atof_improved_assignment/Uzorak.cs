@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 
 namespace atof_improved_assignment
 {
     class Uzorak
     {
+        List<String> errors = new List<string>();
+        //List<String> errorsR = new List<string>();
+
         private String komentar;
         private DateTime datum;
         private double rezultat;
@@ -35,6 +39,11 @@ namespace atof_improved_assignment
             get { return validan; }
             set { validan = value; }
         }
+        public String KomentarValidacije
+        {
+            get { return komentarValidacije; }
+            set { komentarValidacije = value; }
+        }
 
         public Uzorak(string datum, string rezultat, string komentar)
         {
@@ -58,7 +67,8 @@ namespace atof_improved_assignment
             else
             {
                 this.validan = false;
-                this.komentarValidacije += "Format datuma se ne slaze sa zadatim formatima. Originalni datum: " + datum;
+                //this.komentarValidacije += "Format datuma se ne slaze sa zadatim formatima. Originalni datum: " + datum;
+                //errors.Add(komentarValidacije);
             }
 
             double? validanRezultat = validirajRezultat(rezultat);
@@ -69,13 +79,22 @@ namespace atof_improved_assignment
             else
             {
                 this.validan = false;
-                this.komentarValidacije += "Nemoguce je konvertovati rezultat. Originalan rezultat: " + rezultat;
+                //this.komentarValidacije += "Nemoguce je konvertovati rezultat. Originalan rezultat: " + rezultat;
+                //errors.Add(komentarValidacije);
             }
             Console.WriteLine("Objekat je: " + this.validan);
             Console.WriteLine("Rezutat uzorka je: " + this.rezultat);
             Console.WriteLine("Komentar je: " + this.komentarValidacije);
-            
-            
+
+            if (this.validan == false)
+            {
+                this.komentarValidacije += "Ova linija ne moze biti konvertovana. Originalni datum: " + datum + " Originalan rezultat: " + rezultat;
+                errors.Add(komentarValidacije);
+            }
+
+            //System.IO.File.AppendAllLines(@"output.err.txt", errors);
+
+            System.IO.File.AppendAllLines(@"output.err.txt", errors);
         }
 
         private float strToIntegerPart(string str)
