@@ -11,6 +11,7 @@ namespace atof_improved_assignment
         private DateTime datum;
         private double rezultat;
         private bool validan = true; //za validaciju podataka (datum, rezultat)
+        private string komentarValidacije= "";  
        
         public String Komentar
         {
@@ -57,6 +58,7 @@ namespace atof_improved_assignment
             else
             {
                 this.validan = false;
+                this.komentarValidacije += "Format datuma se ne slaze sa zadatim formatima. Originalni datum: " + datum;
             }
 
             double? validanRezultat = validirajRezultat(rezultat);
@@ -67,9 +69,12 @@ namespace atof_improved_assignment
             else
             {
                 this.validan = false;
+                this.komentarValidacije += "Nemoguce je konvertovati rezultat. Originalan rezultat: " + rezultat;
             }
             Console.WriteLine("Objekat je: " + this.validan);
             Console.WriteLine("Rezutat uzorka je: " + this.rezultat);
+            Console.WriteLine("Komentar je: " + this.komentarValidacije);
+            
             
         }
 
@@ -86,21 +91,87 @@ namespace atof_improved_assignment
             return response;
         }
 
+        private float? parseExponent(string str)
+        {
+            if (str.Contains('+'))
+            {
+                String[] splitZnak = str.Split("+");
+                float integerPart = strToIntegerPart(splitZnak[1]);
+                double broj = Math.Pow(10, integerPart);
+                return (float)(broj);
+            }
+            else if (str.Contains('-'))
+            {
+                String[] splitZnak = str.Split('-');
+                float integerPart = strToIntegerPart(splitZnak[1]);
+                double broj = Math.Pow(10, integerPart);
+                return (float)(1/broj);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         private double? validirajRezultat(string str)
         {
-            String[] splitStr = str.Split(".");
-            if (splitStr.Length == 2)
+            String[] splitStr = str.Split("."); //4.54e-7
+            if (splitStr.Length == 2 && !str.ToLower().Contains('e')) //sme da ima tacku ali ne sme da ima e (ovo se odnosi na str a ne na splitStr)
             {
                 float integerPart = strToIntegerPart(splitStr[0]);
                 double floatPart = strToDecimalPart(splitStr[1]);
 
                 return integerPart + floatPart;
             }
-            else if (splitStr.Length == 1 && !str.ToLower().Contains('e'))
+            else if (splitStr.Length == 1 && !str.ToLower().Contains('e')) //nema tacku i ne sadrzi e 
             {
                 double result = 0;
                 float integerPart = strToIntegerPart(splitStr[0]);
                 return result + integerPart;
+            }
+            else if(str.ToLower().Contains('e')) //splitStr.Length == 1 && 
+            {
+                String[] exponentSplit = str.ToLower().Split("e");
+                if (exponentSplit.Length > 2)
+                {
+                    return null;
+                }
+                else
+                {
+                    double scientificResult = 0;
+                    double decimalPart;
+                    float? exponentPart;
+                    if (exponentSplit[0].Contains('.'))
+                    {
+                        String[] exponentDecimalStr = exponentSplit[0].Split(".");
+
+                        float integerPart = strToIntegerPart(exponentDecimalStr[0]);
+                        double floatPart = strToDecimalPart(exponentDecimalStr[1]);
+
+                        decimalPart = integerPart + floatPart;
+                    }
+                    else
+                    {
+                        String[] exponentDecimalStr = exponentSplit[0].Split(".");
+                        float integerPart = strToIntegerPart(exponentDecimalStr[0]);
+                        double tmp = 0;
+                        decimalPart = tmp + integerPart;
+                    }
+
+                    exponentPart = parseExponent(exponentSplit[1]);
+                    if (exponentPart != null)
+                    {
+                        scientificResult = (double)(decimalPart * exponentPart);
+                        return scientificResult;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                    
+                }
+
+               
             }
             else
             {
